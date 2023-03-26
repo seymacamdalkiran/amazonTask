@@ -45,13 +45,7 @@ public class AlisverisTestiWithDataProvider extends TestBase{
         } catch (Exception e) {}
 
         extentLogger.info("Siteye login olunur.");
-        //loginPage.loginOl(mail, sifre);
-        actions.moveToElement(basePage.merhabaGirisYapin).perform();
-        basePage.girisYap.click();
-        basePage.telefonNoYaz.sendKeys(mail);
-        basePage.devamEt.click();
-        basePage.sifre.sendKeys(sifre);
-        basePage.sifreGirisYap.click();
+        loginPage.loginOl(mail, sifre);
 
         extentLogger.info("Login işlemi kontrol edilir.");
         Assert.assertEquals(basePage.hesapVeListeler.getText(),isim);
@@ -65,7 +59,7 @@ public class AlisverisTestiWithDataProvider extends TestBase{
         } catch (Exception e) {
         }
         setCardPage.alisverisListesi.clear();
-        setCardPage.alisverisListesi.sendKeys("Listem");
+        setCardPage.alisverisListesi.sendKeys("SetCard Liste");
         BrowserUtils.waitForClickablility(setCardPage.listeOlustur,3);
         setCardPage.listeOlustur.click();
 

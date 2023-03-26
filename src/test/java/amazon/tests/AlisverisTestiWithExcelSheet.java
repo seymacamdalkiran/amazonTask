@@ -41,13 +41,7 @@ public class AlisverisTestiWithExcelSheet extends TestBase{
 
         extentLogger.info("Siteye login olunur.");
         //  loginPage.loginOl(ConfigurationReader.get("telefon"),ConfigurationReader.get("sifre"));
-        //loginPage.loginOl(email,passwordd);
-        actions.moveToElement(basePage.merhabaGirisYapin).perform();
-        basePage.girisYap.click();
-        basePage.telefonNoYaz.sendKeys(email);
-        basePage.devamEt.click();
-        basePage.sifre.sendKeys(passwordd);
-        basePage.sifreGirisYap.click();
+        loginPage.loginOl(email,passwordd);
 
         extentLogger.info("Login işlemi kontrol edilir.");
         Assert.assertEquals(basePage.hesapVeListeler.getText(),name);
@@ -60,7 +54,7 @@ public class AlisverisTestiWithExcelSheet extends TestBase{
         } catch (Exception e) {
         }
         setCardPage.alisverisListesi.clear();
-        setCardPage.alisverisListesi.sendKeys("Listem");
+        setCardPage.alisverisListesi.sendKeys("SetCard Liste");
         BrowserUtils.waitForClickablility(setCardPage.listeOlustur,3);
         setCardPage.listeOlustur.click();
 

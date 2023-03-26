@@ -46,7 +46,7 @@ public class AlisverisListesiTesti extends TestBase{
         } catch (Exception e) {
         }
         setCardPage.alisverisListesi.clear();
-        setCardPage.alisverisListesi.sendKeys("Listem");
+        setCardPage.alisverisListesi.sendKeys("SetCard Liste");
         BrowserUtils.waitForClickablility(setCardPage.listeOlustur,3);
         setCardPage.listeOlustur.click();
 
