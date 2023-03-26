@@ -3,21 +3,34 @@ package amazon.tests;
 import amazon.pages.*;
 import amazon.utilities.BrowserUtils;
 import amazon.utilities.ConfigurationReader;
-import amazon.utilities.ExcelUtil;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class AlisverisListesiTesti extends TestBase{
+public class AlisverisTestiWithDataProvider extends TestBase{
     LoginPage loginPage=new LoginPage();
     MsiPage msiPage=new MsiPage();
     SetCardPage setCardPage=new SetCardPage();
     ListemPage listemPage=new ListemPage();
 
-    @Test
-    public void test1() {
+    @DataProvider
+    public Object[][] amazon(){
+        String[][] data={
+                {"bulentguneysu@hotmail.com","234765bG","bulent"},
+                {"amazontest1310@gmail.com","123456aT","test"}
+        };
+                return data;
+    }
+
+    @Test(dataProvider = "amazon")
+    public void test1(String mail,String sifre,String isim) {
         basePage=new BasePage();
+        listemPage=new ListemPage();
+        setCardPage=new SetCardPage();
+        msiPage=new MsiPage();
+        loginPage=new LoginPage();
+
         extentLogger=report.createTest("amazon login ol");
 
         extentLogger.info("https://www.amazon.com.tr/ sitesi açılır.");
@@ -32,15 +45,21 @@ public class AlisverisListesiTesti extends TestBase{
         } catch (Exception e) {}
 
         extentLogger.info("Siteye login olunur.");
-        loginPage.loginOl(ConfigurationReader.get("telefon"),ConfigurationReader.get("sifre"));
-
+        //loginPage.loginOl(mail, sifre);
+        actions.moveToElement(basePage.merhabaGirisYapin).perform();
+        basePage.girisYap.click();
+        basePage.telefonNoYaz.sendKeys(mail);
+        basePage.devamEt.click();
+        basePage.sifre.sendKeys(sifre);
+        basePage.sifreGirisYap.click();
 
         extentLogger.info("Login işlemi kontrol edilir.");
-        Assert.assertEquals(basePage.hesapVeListeler.getText(),ConfigurationReader.get("name"));
+        Assert.assertEquals(basePage.hesapVeListeler.getText(),isim);
 
         extentLogger.info("Hesabım bölümünden “SetCard Liste” isimli yeni bir liste oluşturulur.");
         actions.moveToElement(basePage.hesapVeListeler).perform();
-        BrowserUtils.clickWithJS(loginPage.listeOlustur);
+     //   BrowserUtils.clickWithJS(loginPage.listeOlustur);
+        loginPage.listeOlustur.click();
         try {
             setCardPage.birListeOlustur.click();
         } catch (Exception e) {
@@ -51,7 +70,7 @@ public class AlisverisListesiTesti extends TestBase{
         setCardPage.listeOlustur.click();
 
         extentLogger.info("Arama butonu yanındaki kategoriler tabından bilgisayar seçilir.");
-BrowserUtils.waitFor(2);        //clinkible ya da visible işe yaramıyor
+        BrowserUtils.waitFor(2);        //clinkible ya da visible işe yaramıyor
         basePage.tumKategorilerTab.click();
         basePage.tumKategorilerdenSec("Bilgisayarlar");
 
@@ -90,7 +109,7 @@ BrowserUtils.waitFor(2);        //clinkible ya da visible işe yaramıyor
         }
         listemPage.listeyiKapat.click();
         basePage.scrolDown(-400);
-BrowserUtils.waitFor(1);
+        BrowserUtils.waitFor(1);
 
         extentLogger.info("Hesabım - Alışveriş Listesi sayfasına gidilir.");
         actions.moveToElement(basePage.hesapVeListeler).perform();
@@ -110,7 +129,7 @@ BrowserUtils.waitFor(1);
         listemPage.listeyiYonet.click();
         BrowserUtils.waitForVisibility(listemPage.listeyiSil,3);
         listemPage.listeyiSil.click();
-BrowserUtils.waitFor(1);
+        BrowserUtils.waitFor(1);
 //        BrowserUtils.waitForVisibility(listemPage.popupEvet,3);
 //        BrowserUtils.waitForClickablility(listemPage.popupEvet,3);
         listemPage.popupEvet.click();
@@ -120,7 +139,7 @@ BrowserUtils.waitFor(1);
         //nasıl assert edilir?
 
         extentLogger.info("Üye çıkış işlemi yapılır.");
-BrowserUtils.waitFor(2);
+        BrowserUtils.waitFor(2);
 //        BrowserUtils.waitForClickablility(basePage.hesapVeListeler,3);
         actions.moveToElement(basePage.hesapVeListeler).perform();
         basePage.cikisYap.click();

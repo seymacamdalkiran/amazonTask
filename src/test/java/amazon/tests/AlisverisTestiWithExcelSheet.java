@@ -9,15 +9,23 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class AlisverisListesiTesti extends TestBase{
+public class AlisverisTestiWithExcelSheet extends TestBase{
     LoginPage loginPage=new LoginPage();
     MsiPage msiPage=new MsiPage();
     SetCardPage setCardPage=new SetCardPage();
     ListemPage listemPage=new ListemPage();
-
-    @Test
-    public void test1() {
+    @DataProvider
+    public Object[][] userData(){
+        ExcelUtil testData=new ExcelUtil("src/test/resources/amazon.xlsx","QA 1");
+        return testData.getDataArrayWithoutFirstRow();
+    }
+    @Test(dataProvider = "userData")
+    public void test1(String email,String passwordd,String name) {
         basePage=new BasePage();
+        listemPage=new ListemPage();
+        setCardPage=new SetCardPage();
+        msiPage=new MsiPage();
+        loginPage=new LoginPage();
         extentLogger=report.createTest("amazon login ol");
 
         extentLogger.info("https://www.amazon.com.tr/ sitesi açılır.");
@@ -32,11 +40,17 @@ public class AlisverisListesiTesti extends TestBase{
         } catch (Exception e) {}
 
         extentLogger.info("Siteye login olunur.");
-        loginPage.loginOl(ConfigurationReader.get("telefon"),ConfigurationReader.get("sifre"));
-
+        //  loginPage.loginOl(ConfigurationReader.get("telefon"),ConfigurationReader.get("sifre"));
+        //loginPage.loginOl(email,passwordd);
+        actions.moveToElement(basePage.merhabaGirisYapin).perform();
+        basePage.girisYap.click();
+        basePage.telefonNoYaz.sendKeys(email);
+        basePage.devamEt.click();
+        basePage.sifre.sendKeys(passwordd);
+        basePage.sifreGirisYap.click();
 
         extentLogger.info("Login işlemi kontrol edilir.");
-        Assert.assertEquals(basePage.hesapVeListeler.getText(),ConfigurationReader.get("name"));
+        Assert.assertEquals(basePage.hesapVeListeler.getText(),name);
 
         extentLogger.info("Hesabım bölümünden “SetCard Liste” isimli yeni bir liste oluşturulur.");
         actions.moveToElement(basePage.hesapVeListeler).perform();
@@ -51,7 +65,7 @@ public class AlisverisListesiTesti extends TestBase{
         setCardPage.listeOlustur.click();
 
         extentLogger.info("Arama butonu yanındaki kategoriler tabından bilgisayar seçilir.");
-BrowserUtils.waitFor(2);        //clinkible ya da visible işe yaramıyor
+        BrowserUtils.waitFor(2);        //clinkible ya da visible işe yaramıyor
         basePage.tumKategorilerTab.click();
         basePage.tumKategorilerdenSec("Bilgisayarlar");
 
@@ -90,7 +104,7 @@ BrowserUtils.waitFor(2);        //clinkible ya da visible işe yaramıyor
         }
         listemPage.listeyiKapat.click();
         basePage.scrolDown(-400);
-BrowserUtils.waitFor(1);
+        BrowserUtils.waitFor(1);
 
         extentLogger.info("Hesabım - Alışveriş Listesi sayfasına gidilir.");
         actions.moveToElement(basePage.hesapVeListeler).perform();
@@ -110,7 +124,7 @@ BrowserUtils.waitFor(1);
         listemPage.listeyiYonet.click();
         BrowserUtils.waitForVisibility(listemPage.listeyiSil,3);
         listemPage.listeyiSil.click();
-BrowserUtils.waitFor(1);
+        BrowserUtils.waitFor(1);
 //        BrowserUtils.waitForVisibility(listemPage.popupEvet,3);
 //        BrowserUtils.waitForClickablility(listemPage.popupEvet,3);
         listemPage.popupEvet.click();
@@ -120,7 +134,7 @@ BrowserUtils.waitFor(1);
         //nasıl assert edilir?
 
         extentLogger.info("Üye çıkış işlemi yapılır.");
-BrowserUtils.waitFor(2);
+        BrowserUtils.waitFor(2);
 //        BrowserUtils.waitForClickablility(basePage.hesapVeListeler,3);
         actions.moveToElement(basePage.hesapVeListeler).perform();
         basePage.cikisYap.click();
