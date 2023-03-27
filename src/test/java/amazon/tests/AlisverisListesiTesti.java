@@ -37,8 +37,8 @@ public class AlisverisListesiTesti extends TestBase{
 
         extentLogger.info("Hesabım bölümünden “SetCard Liste” isimli yeni bir liste oluşturulur.");
         actions.moveToElement(basePage.hesapVeListeler).perform();
+BrowserUtils.waitFor(3);
         int firstListNumber = basePage.listelerinListesi.size();
-BrowserUtils.waitFor(1);
         loginPage.listeOlustur.click();
         try {
             setCardPage.birListeOlustur.click();
@@ -66,15 +66,17 @@ BrowserUtils.waitFor(1);        //clinkible ya da visible işe yaramıyor
         Assert.assertTrue(msiPage.msiAra.isDisplayed());
 
         extentLogger.info("Arama sonuçları sayfasından 2. sayfa açılır.");
-        BrowserUtils.waitForClickablility(msiPage.ikinciSayfayiSec,5);
-        msiPage.ikinciSayfayiSec.click();
+        //BrowserUtils.waitForClickablility(msiPage.ikinciSayfayiSec,5);
+        //msiPage.ikinciSayfayiSec.click();
+        msiPage.sayfaSec(2);
 
         extentLogger.info("2. sayfanın açıldığı kontrol edilir.");
         Assert.assertTrue(msiPage.ikinciSayfaYazisi.isDisplayed());
 
         extentLogger.info("Sayfadaki 2. ürün oluşturulan “SetCard Liste” listesine eklenir.");
-        BrowserUtils.waitForClickablility(msiPage.ikinciUrun,3);
-        msiPage.ikinciUrun.click();
+       // BrowserUtils.waitForClickablility(msiPage.ikinciUrun,3);
+        //msiPage.ikinciUrun.click();
+        msiPage.urunSec(2);
         basePage.scrolDown(300);
         BrowserUtils.waitForClickablility(msiPage.listeyeEkle,3);
         msiPage.listeyeEkle.click();
@@ -92,8 +94,9 @@ BrowserUtils.waitFor(1);        //clinkible ya da visible işe yaramıyor
 BrowserUtils.waitFor(1);
 
         extentLogger.info("Hesabım - Alışveriş Listesi sayfasına gidilir.");
+
         actions.moveToElement(basePage.hesapVeListeler).perform();
-BrowserUtils.waitFor(2);
+BrowserUtils.waitFor(3);
         int secondListNumber = basePage.listelerinListesi.size();
         BrowserUtils.waitForClickablility(basePage.hesaplardakiListemBolumu,3);
         basePage.hesaplardakiListemBolumu.click();
@@ -115,12 +118,16 @@ BrowserUtils.waitFor(1);
 //        BrowserUtils.waitForVisibility(listemPage.popupEvet,3);
 //        BrowserUtils.waitForClickablility(listemPage.popupEvet,3);
         listemPage.popupEvet.click();
-
+        System.out.println("firstListNumber = " + firstListNumber);
+        System.out.println("secondListNumber = " + secondListNumber);
         extentLogger.info("Silme işleminin gerçekleştiği kontrol edilir.");
+
+BrowserUtils.waitFor(2);
         actions.moveToElement(basePage.hesapVeListeler).perform();
 BrowserUtils.waitFor(2);
         int thirdListNumber = basePage.listelerinListesi.size();
-        Assert.assertTrue(firstListNumber==thirdListNumber);
+        System.out.println("thirdListNumber = " + thirdListNumber);
+        Assert.assertEquals(firstListNumber,thirdListNumber);
 
         extentLogger.info("Üye çıkış işlemi yapılır.");
         BrowserUtils.clickWithJS(basePage.cikisYap);
@@ -128,9 +135,6 @@ BrowserUtils.waitFor(2);
         extentLogger.info("Çıkış işleminin yapıldığı kontrol edilir.");
         Assert.assertTrue(loginPage.telefonNoYaz.isEnabled());
 
-        System.out.println("firstListNumber = " + firstListNumber);
-        System.out.println("secondListNumber = " + secondListNumber);
-        System.out.println("thirdListNumber = " + thirdListNumber);
     }
     /*
     Amazon Senaryosu
