@@ -52,7 +52,8 @@ public class AlisverisTestiWithDataProvider extends TestBase{
 
         extentLogger.info("Hesabım bölümünden “SetCard Liste” isimli yeni bir liste oluşturulur.");
         actions.moveToElement(basePage.hesapVeListeler).perform();
-     //   BrowserUtils.clickWithJS(loginPage.listeOlustur);
+        BrowserUtils.waitFor(2);
+        int firstListNumber = basePage.listelerinListesi.size();
         loginPage.listeOlustur.click();
         try {
             setCardPage.birListeOlustur.click();
@@ -60,7 +61,8 @@ public class AlisverisTestiWithDataProvider extends TestBase{
         }
         setCardPage.alisverisListesi.clear();
         setCardPage.alisverisListesi.sendKeys("SetCard Liste");
-        BrowserUtils.waitForClickablility(setCardPage.listeOlustur,3);
+//        BrowserUtils.waitForClickablility(setCardPage.listeOlustur,3);
+        BrowserUtils.waitFor(2);        //Akıllı wait kullanınca ilk test geçiyor ikinci de patlıyor
         setCardPage.listeOlustur.click();
 
         extentLogger.info("Arama butonu yanındaki kategoriler tabından bilgisayar seçilir.");
@@ -124,20 +126,16 @@ public class AlisverisTestiWithDataProvider extends TestBase{
         BrowserUtils.waitForVisibility(listemPage.listeyiSil,3);
         listemPage.listeyiSil.click();
         BrowserUtils.waitFor(1);
-//        BrowserUtils.waitForVisibility(listemPage.popupEvet,3);
-//        BrowserUtils.waitForClickablility(listemPage.popupEvet,3);
         listemPage.popupEvet.click();
 
         extentLogger.info("Silme işleminin gerçekleştiği kontrol edilir.");
-        //actions.moveToElement(basePage.hesapVeListeler).perform();
-        //nasıl assert edilir?
+        BrowserUtils.waitFor(2);
+        actions.moveToElement(basePage.hesapVeListeler).perform();
+        int lastListNumber = basePage.listelerinListesi.size();
+        Assert.assertTrue(firstListNumber==lastListNumber);
 
         extentLogger.info("Üye çıkış işlemi yapılır.");
-        BrowserUtils.waitFor(2);
-//        BrowserUtils.waitForClickablility(basePage.hesapVeListeler,3);
-        actions.moveToElement(basePage.hesapVeListeler).perform();
         basePage.cikisYap.click();
-//        BrowserUtils.clickWithJS(basePage.cikisYap);
 
         extentLogger.info("Çıkış işleminin yapıldığı kontrol edilir.");
         Assert.assertTrue(loginPage.telefonNoYaz.isEnabled());

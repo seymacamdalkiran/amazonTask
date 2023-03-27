@@ -8,6 +8,9 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BasePage {
     public BasePage() {
         PageFactory.initElements(Driver.get(),this);
@@ -43,6 +46,9 @@ public class BasePage {
 
     @FindBy(xpath = "//a[contains(@class,'  nav-item')]//span[@class=\"nav-text\"]")
     public WebElement hesaplardakiListemBolumu;
+    @FindBy(xpath = "//span[@class='nav-text']")
+    public List<WebElement> listelerinListesi;
+
     public void tumKategorilerdenSec(String tab){
         WebElement searchDropdownBox = Driver.get().findElement(By.id("searchDropdownBox"));
         Select select=new Select(searchDropdownBox);
