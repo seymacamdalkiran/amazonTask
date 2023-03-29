@@ -29,5 +29,4 @@ public class ListemPage extends BasePage{
     public WebElement listelerim;
     @FindBy(xpath = "//div[@class='aok-inline-block aok-align-center']")
     public WebElement dahaFazlasi;
-
 }

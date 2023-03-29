@@ -3,20 +3,14 @@ package amazon.tests;
 import amazon.pages.*;
 import amazon.utilities.BrowserUtils;
 import amazon.utilities.ConfigurationReader;
-import amazon.utilities.ExcelUtil;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
-import org.testng.annotations.DataProvider;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-public class AlisverisTestiWithExcelSheet extends TestBase{
-    @DataProvider
-    public Object[][] userData(){
-        ExcelUtil testData=new ExcelUtil("src/test/resources/amazon.xlsx","QA 1");
-        return testData.getDataArrayWithoutFirstRow();
-    }
-    @Test(dataProvider = "userData")
-    public void test1(String email,String passwordd,String name) {
+public class Deneme extends TestBase{
+    @Test
+    public void test() {
         LoginPage loginPage=new LoginPage();
         MsiPage msiPage=new MsiPage();
         SetCardPage setCardPage=new SetCardPage();
@@ -31,19 +25,19 @@ public class AlisverisTestiWithExcelSheet extends TestBase{
 
         extentLogger.info("Çerez tercihlerinden Çerezleri kabul et seçilir.");
         try {
-            msiPage.cerezleriKabulEt.click();
+            listemPage.cerezleriKabulEt.click();
         } catch (Exception e) {}
 
         extentLogger.info("Siteye login olunur.");
-        loginPage.loginOl(email,passwordd);
+        loginPage.loginOl(ConfigurationReader.get("telefon"),ConfigurationReader.get("sifre"));
 
         extentLogger.info("Login işlemi kontrol edilir.");
-        Assert.assertEquals(msiPage.hesapVeListeler.getText(),name);
+//        Assert.assertEquals(basePage.hesapVeListeler.getText(),ConfigurationReader.get("name"));
 
         extentLogger.info("Hesabım bölümünden “SetCard Liste” isimli yeni bir liste oluşturulur.");
-        actions.moveToElement(msiPage.hesapVeListeler).perform();
+        actions.moveToElement(listemPage.hesapVeListeler).perform();
         BrowserUtils.waitFor(3);
-        int firstListNumber = msiPage.listelerinListesi.size();
+        int firstListNumber = listemPage.listelerinListesi.size();
         loginPage.listeOlustur.click();
         try {
             setCardPage.birListeOlustur.click();
@@ -56,16 +50,16 @@ public class AlisverisTestiWithExcelSheet extends TestBase{
 
         extentLogger.info("Arama butonu yanındaki kategoriler tabından bilgisayar seçilir.");
         BrowserUtils.waitFor(1);        //clinkible ya da visible işe yaramıyor
-        msiPage.tumKategorilerTab.click();
-        msiPage.tumKategorilerdenSec("Bilgisayarlar");
+        listemPage.tumKategorilerTab.click();
+        listemPage.tumKategorilerdenSec("Bilgisayarlar");
 
         extentLogger.info("Bilgisayar kategorisi seçildiği kontrol edilir.");
-        Select select=new Select(msiPage.tumKategorilerTab);
+        Select select=new Select(listemPage.tumKategorilerTab);
         Assert.assertEquals(select.getFirstSelectedOption().getText(),"Bilgisayarlar");
 
         extentLogger.info("Arama alanına msi yazılır ve arama yapılır.");
-        msiPage.aramaCubugu.sendKeys("msi");
-        msiPage.searchButton.click();
+        listemPage.aramaCubugu.sendKeys("msi");
+        listemPage.searchButton.click();
 
         extentLogger.info("Arama yapıldığı kontrol edilir.");
         Assert.assertTrue(msiPage.msiAra.isDisplayed());
@@ -82,7 +76,7 @@ public class AlisverisTestiWithExcelSheet extends TestBase{
         // BrowserUtils.waitForClickablility(msiPage.ikinciUrun,3);
         //msiPage.ikinciUrun.click();
         msiPage.urunSec(2);
-        msiPage.scrolDown(300);
+        listemPage.scrolDown(300);
         BrowserUtils.waitForClickablility(msiPage.listeyeEkle,3);
         msiPage.listeyeEkle.click();
 
@@ -95,16 +89,16 @@ public class AlisverisTestiWithExcelSheet extends TestBase{
             Assert.assertTrue(listemPage.urunZatenMevcut.isDisplayed());
         }
         listemPage.listeyiKapat.click();
-        msiPage.scrolDown(-400);
+        listemPage.scrolDown(-400);
         BrowserUtils.waitFor(1);
 
         extentLogger.info("Hesabım - Alışveriş Listesi sayfasına gidilir.");
 
-        actions.moveToElement(msiPage.hesapVeListeler).perform();
+        actions.moveToElement(listemPage.hesapVeListeler).perform();
         BrowserUtils.waitFor(3);
-        int secondListNumber = msiPage.listelerinListesi.size();
-        BrowserUtils.waitForClickablility(msiPage.hesaplardakiListemBolumu,3);
-        msiPage.hesaplardakiListemBolumu.click();
+        int secondListNumber = listemPage.listelerinListesi.size();
+        BrowserUtils.waitForClickablility(listemPage.hesaplardakiListemBolumu,3);
+        listemPage.hesaplardakiListemBolumu.click();
 
         extentLogger.info("“Alışveriş Listesi” sayfası açıldığı kontrol edilir.");
         Assert.assertTrue(listemPage.listelerim.isDisplayed());
@@ -113,7 +107,7 @@ public class AlisverisTestiWithExcelSheet extends TestBase{
         listemPage.kaldir.click();
 
         extentLogger.info("Oluşturulan SetCard Listesi silinir.");
-        BrowserUtils.waitForVisibility(listemPage.dahaFazlasi,3);
+   /*     BrowserUtils.waitForVisibility(listemPage.dahaFazlasi,3);
         listemPage.dahaFazlasi.click();
         BrowserUtils.waitForVisibility(listemPage.listeyiYonet,3);
         listemPage.listeyiYonet.click();
@@ -123,47 +117,15 @@ public class AlisverisTestiWithExcelSheet extends TestBase{
 //        BrowserUtils.waitForVisibility(listemPage.popupEvet,3);
 //        BrowserUtils.waitForClickablility(listemPage.popupEvet,3);
         listemPage.popupEvet.click();
+    */
         System.out.println("firstListNumber = " + firstListNumber);
         System.out.println("secondListNumber = " + secondListNumber);
-        extentLogger.info("Silme işleminin gerçekleştiği kontrol edilir.");
 
+        System.out.println("setCardPage.listelerim.size = " + setCardPage.listelerim.size());
         BrowserUtils.waitFor(2);
-        actions.moveToElement(msiPage.hesapVeListeler).perform();
+        setCardPage.listeleriSil();
         BrowserUtils.waitFor(2);
-        int thirdListNumber = msiPage.listelerinListesi.size();
-        System.out.println("thirdListNumber = " + thirdListNumber);
-        Assert.assertEquals(firstListNumber,thirdListNumber);
+        System.out.println("setCardPage.listelerim.size = " + setCardPage.listelerim.size());
 
-        extentLogger.info("Üye çıkış işlemi yapılır.");
-        BrowserUtils.clickWithJS(msiPage.cikisYap);
-
-        extentLogger.info("Çıkış işleminin yapıldığı kontrol edilir.");
-        Assert.assertTrue(loginPage.telefonNoYaz.isEnabled());
     }
-    /*
-    Amazon Senaryosu
-
-o https://www.amazon.com.tr/ sitesi açılır.
-o Ana sayfanın açıldığı kontrol edilir.
-o Çerez tercihlerinden Çerezleri kabul et seçilir.
-o Siteye login olunur.
-o Login işlemi kontrol edilir.
-o Hesabım bölümünden “SetCard Liste” isimli yeni bir liste oluşturulur.
-
-o Arama butonu yanındaki kategoriler tabından bilgisayar seçilir.
-o Bilgisayar kategorisi seçildiği kontrol edilir.
-o Arama alanına msi yazılır ve arama yapılır.
-o Arama yapıldığı kontrol edilir.
-o Arama sonuçları sayfasından 2. sayfa açılır.
-o 2. sayfanın açıldığı kontrol edilir.
-o Sayfadaki 2. ürün oluşturulan “SetCard Liste” listesine eklenir.
-o 2. Ürünün listeye eklendiği kontrol edilir.
-o Hesabım - Alışveriş Listesi sayfasına gidilir.
-o “Alışveriş Listesi” sayfası açıldığı kontrol edilir.
-o Eklenen ürün SetCard Liste’sinden silinir.
-o Oluşturulan SetCard Listesi silinir.
-o Silme işleminin gerçekleştiği kontrol edilir.
-o Üye çıkış işlemi yapılır.
-o Çıkış işleminin yapıldığı kontrol edilir.
-     */
 }

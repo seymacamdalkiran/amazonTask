@@ -9,15 +9,12 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class AlisverisTestiWithDataProvider extends TestBase{
-    LoginPage loginPage=new LoginPage();
-    MsiPage msiPage=new MsiPage();
-    SetCardPage setCardPage=new SetCardPage();
-    ListemPage listemPage=new ListemPage();
+
 
     @DataProvider
     public Object[][] amazon(){
         String[][] data={
-                {"bulentguneysu@hotmail.com","234765bG","bulent"},
+                {"testssomeone@hotmail.com","135246aT","someone"},
                 {"amazontest1310@gmail.com","123456aT","test"}
         };
                 return data;
@@ -25,12 +22,10 @@ public class AlisverisTestiWithDataProvider extends TestBase{
 
     @Test(dataProvider = "amazon")
     public void test1(String mail,String sifre,String isim) {
-        basePage=new BasePage();
-        listemPage=new ListemPage();
-        setCardPage=new SetCardPage();
-        msiPage=new MsiPage();
-        loginPage=new LoginPage();
-
+        LoginPage loginPage=new LoginPage();
+        MsiPage msiPage=new MsiPage();
+        SetCardPage setCardPage=new SetCardPage();
+        ListemPage listemPage=new ListemPage();
         extentLogger=report.createTest("amazon login ol");
 
         extentLogger.info("https://www.amazon.com.tr/ sitesi açılır.");
@@ -41,19 +36,19 @@ public class AlisverisTestiWithDataProvider extends TestBase{
 
         extentLogger.info("Çerez tercihlerinden Çerezleri kabul et seçilir.");
         try {
-            basePage.cerezleriKabulEt.click();
+            msiPage.cerezleriKabulEt.click();
         } catch (Exception e) {}
 
         extentLogger.info("Siteye login olunur.");
-        loginPage.loginOl(mail, sifre);
+        loginPage.loginOl(mail,sifre);
 
         extentLogger.info("Login işlemi kontrol edilir.");
-        Assert.assertEquals(basePage.hesapVeListeler.getText(),isim);
+        Assert.assertEquals(msiPage.hesapVeListeler.getText(),isim);
 
         extentLogger.info("Hesabım bölümünden “SetCard Liste” isimli yeni bir liste oluşturulur.");
-        actions.moveToElement(basePage.hesapVeListeler).perform();
-        BrowserUtils.waitFor(2);
-        int firstListNumber = basePage.listelerinListesi.size();
+        actions.moveToElement(msiPage.hesapVeListeler).perform();
+        BrowserUtils.waitFor(3);
+        int firstListNumber = msiPage.listelerinListesi.size();
         loginPage.listeOlustur.click();
         try {
             setCardPage.birListeOlustur.click();
@@ -61,37 +56,38 @@ public class AlisverisTestiWithDataProvider extends TestBase{
         }
         setCardPage.alisverisListesi.clear();
         setCardPage.alisverisListesi.sendKeys("SetCard Liste");
-//        BrowserUtils.waitForClickablility(setCardPage.listeOlustur,3);
-        BrowserUtils.waitFor(2);        //Akıllı wait kullanınca ilk test geçiyor ikinci de patlıyor
+        BrowserUtils.waitForClickablility(setCardPage.listeOlustur,3);
         setCardPage.listeOlustur.click();
 
         extentLogger.info("Arama butonu yanındaki kategoriler tabından bilgisayar seçilir.");
-        BrowserUtils.waitFor(2);        //clinkible ya da visible işe yaramıyor
-        basePage.tumKategorilerTab.click();
-        basePage.tumKategorilerdenSec("Bilgisayarlar");
+        BrowserUtils.waitFor(1);        //clinkible ya da visible işe yaramıyor
+        msiPage.tumKategorilerTab.click();
+        msiPage.tumKategorilerdenSec("Bilgisayarlar");
 
         extentLogger.info("Bilgisayar kategorisi seçildiği kontrol edilir.");
-        Select select=new Select(basePage.tumKategorilerTab);
+        Select select=new Select(msiPage.tumKategorilerTab);
         Assert.assertEquals(select.getFirstSelectedOption().getText(),"Bilgisayarlar");
 
         extentLogger.info("Arama alanına msi yazılır ve arama yapılır.");
-        basePage.aramaCubugu.sendKeys("msi");
-        basePage.searchButton.click();
+        msiPage.aramaCubugu.sendKeys("msi");
+        msiPage.searchButton.click();
 
         extentLogger.info("Arama yapıldığı kontrol edilir.");
         Assert.assertTrue(msiPage.msiAra.isDisplayed());
 
         extentLogger.info("Arama sonuçları sayfasından 2. sayfa açılır.");
-        BrowserUtils.waitForClickablility(msiPage.ikinciSayfayiSec,5);
-        msiPage.ikinciSayfayiSec.click();
+        //BrowserUtils.waitForClickablility(msiPage.ikinciSayfayiSec,5);
+        //msiPage.ikinciSayfayiSec.click();
+        msiPage.sayfaSec(2);
 
         extentLogger.info("2. sayfanın açıldığı kontrol edilir.");
         Assert.assertTrue(msiPage.ikinciSayfaYazisi.isDisplayed());
 
         extentLogger.info("Sayfadaki 2. ürün oluşturulan “SetCard Liste” listesine eklenir.");
-        BrowserUtils.waitForClickablility(msiPage.ikinciUrun,3);
-        msiPage.ikinciUrun.click();
-        basePage.scrolDown(300);
+        // BrowserUtils.waitForClickablility(msiPage.ikinciUrun,3);
+        //msiPage.ikinciUrun.click();
+        msiPage.urunSec(2);
+        msiPage.scrolDown(300);
         BrowserUtils.waitForClickablility(msiPage.listeyeEkle,3);
         msiPage.listeyeEkle.click();
 
@@ -104,13 +100,16 @@ public class AlisverisTestiWithDataProvider extends TestBase{
             Assert.assertTrue(listemPage.urunZatenMevcut.isDisplayed());
         }
         listemPage.listeyiKapat.click();
-        basePage.scrolDown(-400);
+        msiPage.scrolDown(-400);
         BrowserUtils.waitFor(1);
 
         extentLogger.info("Hesabım - Alışveriş Listesi sayfasına gidilir.");
-        actions.moveToElement(basePage.hesapVeListeler).perform();
-        BrowserUtils.waitForClickablility(basePage.hesaplardakiListemBolumu,3);
-        basePage.hesaplardakiListemBolumu.click();
+
+        actions.moveToElement(msiPage.hesapVeListeler).perform();
+        BrowserUtils.waitFor(3);
+        int secondListNumber = msiPage.listelerinListesi.size();
+        BrowserUtils.waitForClickablility(msiPage.hesaplardakiListemBolumu,3);
+        msiPage.hesaplardakiListemBolumu.click();
 
         extentLogger.info("“Alışveriş Listesi” sayfası açıldığı kontrol edilir.");
         Assert.assertTrue(listemPage.listelerim.isDisplayed());
@@ -126,16 +125,22 @@ public class AlisverisTestiWithDataProvider extends TestBase{
         BrowserUtils.waitForVisibility(listemPage.listeyiSil,3);
         listemPage.listeyiSil.click();
         BrowserUtils.waitFor(1);
+//        BrowserUtils.waitForVisibility(listemPage.popupEvet,3);
+//        BrowserUtils.waitForClickablility(listemPage.popupEvet,3);
         listemPage.popupEvet.click();
-
+        System.out.println("firstListNumber = " + firstListNumber);
+        System.out.println("secondListNumber = " + secondListNumber);
         extentLogger.info("Silme işleminin gerçekleştiği kontrol edilir.");
+
         BrowserUtils.waitFor(2);
-        actions.moveToElement(basePage.hesapVeListeler).perform();
-        int lastListNumber = basePage.listelerinListesi.size();
-        Assert.assertTrue(firstListNumber==lastListNumber);
+        actions.moveToElement(msiPage.hesapVeListeler).perform();
+        BrowserUtils.waitFor(2);
+        int thirdListNumber = msiPage.listelerinListesi.size();
+        System.out.println("thirdListNumber = " + thirdListNumber);
+        Assert.assertEquals(firstListNumber,thirdListNumber);
 
         extentLogger.info("Üye çıkış işlemi yapılır.");
-        basePage.cikisYap.click();
+        BrowserUtils.clickWithJS(msiPage.cikisYap);
 
         extentLogger.info("Çıkış işleminin yapıldığı kontrol edilir.");
         Assert.assertTrue(loginPage.telefonNoYaz.isEnabled());

@@ -11,6 +11,14 @@ public class LoginPage extends BasePage{
     public WebElement listeOlustur;
     @FindBy(xpath = "//input[@class=\"a-button-input\"]")
     public WebElement birListeOlusturun;
+    @FindBy(id = "ap_email")
+    public WebElement telefonNoYaz;
+    @FindBy(id = "continue")
+    public WebElement devamEt;
+    @FindBy(id = "ap_password")
+    public WebElement sifre;
+    @FindBy(id = "signInSubmit")
+    public WebElement sifreGirisYap;
     public void loginOl(String telefon,String sifree){
         actions.moveToElement(merhabaGirisYapin).perform();
         girisYap.click();

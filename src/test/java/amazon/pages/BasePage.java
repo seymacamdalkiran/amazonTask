@@ -11,7 +11,7 @@ import org.openqa.selenium.support.ui.Select;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BasePage {
+public abstract class BasePage {
     public BasePage() {
         PageFactory.initElements(Driver.get(),this);
     }
@@ -24,14 +24,7 @@ public class BasePage {
     public WebElement merhabaGirisYapin;
     @FindBy(xpath = "//a[@rel='nofollow']//span[@class=\"nav-action-inner\"]")
     public WebElement girisYap;
-    @FindBy(id = "ap_email")
-    public WebElement telefonNoYaz;
-    @FindBy(id = "continue")
-    public WebElement devamEt;
-    @FindBy(id = "ap_password")
-    public WebElement sifre;
-    @FindBy(id = "signInSubmit")
-    public WebElement sifreGirisYap;
+
     @FindBy(id = "nav-link-accountList-nav-line-1")
     public WebElement hesapVeListeler;
     @FindBy(xpath = "//span[.='Çıkış Yap']")

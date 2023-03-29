@@ -25,7 +25,6 @@ public class TestBase {
     protected ExtentReports report;
     protected ExtentHtmlReporter htmlReporter;
     protected ExtentTest extentLogger;
-    protected BasePage basePage;
 
     @BeforeMethod
     public void setup(){
